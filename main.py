@@ -20,18 +20,25 @@ def _AddEdgeInGraph_(a):
         edge = e.split(",")
         print(edge)
         G.add_edge(edge[0], edge[1])
-        
+
+def _SetAllNodeColorsToGray_(g):
+    for nod in g.nodes:
+        g._node[nod]['color'] = "gray"
+
 G = nx.Graph()
 Arestas = _ReadFromFile_()
 _AddEdgeInGraph_(Arestas)
-baseColorMap = ["green", "blue", "red", "orange", "yellow"]
+_SetAllNodeColorsToGray_(G)
+baseColorMap = ["blue", "green", "red", "orange", "yellow", "pink", "brown", "black", "white"]
 i = 0
 colorMap = []
 for nd in G.nodes:
+    colorChoices = baseColorMap[:]
+    i = 0
     for vizinho in G[nd]:
-        print(vizinho)
-    G._node[nd]["color"] = "green"
-    i+= 1
+        if (G._node[vizinho]["color"] in colorChoices):
+            colorChoices.remove(G._node[vizinho]["color"])
+    G._node[nd]["color"] = colorChoices[0]
     colorMap.append(G._node[nd]["color"])
 nx.draw(G, node_color = colorMap,with_labels=True)
 plt.show()
