@@ -24,5 +24,14 @@ def _AddEdgeInGraph_(a):
 G = nx.Graph()
 Arestas = _ReadFromFile_()
 _AddEdgeInGraph_(Arestas)
-nx.draw(G, with_labels=True)
+baseColorMap = ["green", "blue", "red", "orange", "yellow"]
+i = 0
+colorMap = []
+for nd in G.nodes:
+    for vizinho in G[nd]:
+        print(vizinho)
+    G._node[nd]["color"] = "green"
+    i+= 1
+    colorMap.append(G._node[nd]["color"])
+nx.draw(G, node_color = colorMap,with_labels=True)
 plt.show()
