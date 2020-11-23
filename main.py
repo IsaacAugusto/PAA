@@ -4,6 +4,7 @@ import os.path
 from os import path
 import sys
 
+
 def _ReadFromFile_():
     if (path.exists("Arestas.txt")):
         f = open("Arestas.txt", "r")
@@ -18,7 +19,6 @@ def _AddEdgeInGraph_(a):
     for e in a:
         e = e[:-1]
         edge = e.split(",")
-        print(edge)
         G.add_edge(edge[0], edge[1])
 
 def _SetAllNodeColorsToGray_(g):
@@ -38,7 +38,10 @@ for nd in G.nodes:
     for vizinho in G[nd]:
         if (G._node[vizinho]["color"] in colorChoices):
             colorChoices.remove(G._node[vizinho]["color"])
-    G._node[nd]["color"] = colorChoices[0]
+    if len(colorChoices) > 0:
+        G._node[nd]["color"] = colorChoices[0]
+    else:
+        G._node[nd]["color"] = "gray"
     colorMap.append(G._node[nd]["color"])
 nx.draw(G, node_color = colorMap,with_labels=True)
 plt.show()
