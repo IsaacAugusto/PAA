@@ -4,7 +4,7 @@ import os.path
 from os import path
 import sys
 
-
+#Função que lê as arestas criadas pelo gerador de arestas
 def _ReadFromFile_():
     if (path.exists("Arestas.txt")):
         f = open("Arestas.txt", "r")
@@ -15,33 +15,46 @@ def _ReadFromFile_():
         print("Não existe o arquivo 'Arestas.txt' no diretorio.")
         sys.exit(0)
 
+#Função que adiciona as arestas lidas no grafo
 def _AddEdgeInGraph_(a):
-    for e in a:
-        e = e[:-1]
-        edge = e.split(",")
-        G.add_edge(edge[0], edge[1])
+    for e in a: #Loop por todas as arestas
+        e = e[:-1] #remover \n
+        edge = e.split(",") #Separo pela virgula
+        G.add_edge(edge[0], edge[1]) #Adiciono a aresta lida
 
+#Pinta todos os nodes para cinza inicialmente, para existir o atributo cor
 def _SetAllNodeColorsToGray_(g):
     for nod in g.nodes:
         g._node[nod]['color'] = "gray"
 
-G = nx.Graph()
-Arestas = _ReadFromFile_()
-_AddEdgeInGraph_(Arestas)
-_SetAllNodeColorsToGray_(G)
-baseColorMap = ["blue", "green", "red", "orange", "yellow", "pink", "brown", "black", "white"]
-i = 0
-colorMap = []
-for nd in G.nodes:
-    colorChoices = baseColorMap[:]
-    i = 0
-    for vizinho in G[nd]:
-        if (G._node[vizinho]["color"] in colorChoices):
-            colorChoices.remove(G._node[vizinho]["color"])
-    if len(colorChoices) > 0:
-        G._node[nd]["color"] = colorChoices[0]
+def _AddResults_(node, color):
+    return "Torre " +str(node) + " = " + color + "\n"
+
+def _GenerateResultsFile_(rlist):
+    print (rlist)
+    file = open("Results.txt", "w")
+    file.write(rlist)
+    file.close()
+
+G = nx.Graph() #Crio o grafo
+ResultList = ""
+Arestas = _ReadFromFile_() #Leio as arestas
+_AddEdgeInGraph_(Arestas) #Adiciono as arestas
+_SetAllNodeColorsToGray_(G)#Pinta todas as arestas de cinza
+baseColorMap = ["blue", "green", "red", "orange", "yellow", "pink", "brown", "black", "white"] #Cores disponiveis
+colorMap = [] #Colormap para fazer a coloração do grafo
+for nd in G.nodes: #Loop por todos os nodes
+    colorChoices = baseColorMap[:] #Clono as cores disponíveis
+    for vizinho in G[nd]: #Loop por todos os vizinhos do vertice em questão
+        if (G._node[vizinho]["color"] in colorChoices): #Se a cor do vizinho atual ja esta no vetor (já foi colorido)
+            colorChoices.remove(G._node[vizinho]["color"]) #Remove aquela cor pois não esta mais disponível
+    if len(colorChoices) > 0: #Se não tiver removido todas as cores
+        G._node[nd]["color"] = colorChoices[0] #Adiciona a primeira cor disponível restante no vetor
     else:
-        G._node[nd]["color"] = "gray"
-    colorMap.append(G._node[nd]["color"])
-nx.draw(G, node_color = colorMap,with_labels=True)
-plt.show()
+        G._node[nd]["color"] = "gray" #Se não tiver nenhuma das cores disponíveis, pinta como cinza
+    colorMap.append(G._node[nd]["color"]) #Adiciona a cor ao mapa de cores
+    ResultList += _AddResults_(nd, G._node[nd]["color"])
+
+_GenerateResultsFile_(ResultList)
+nx.draw(G, node_color = colorMap,with_labels=True) #Desenha o grafo
+plt.show() #Mostra em uma janela
