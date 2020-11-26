@@ -2,6 +2,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import os.path
 from os import path
+import time
 import sys
 
 #Função que lê as arestas criadas pelo gerador de arestas
@@ -43,6 +44,7 @@ _AddEdgeInGraph_(Arestas) #Adiciono as arestas
 _SetAllNodeColorsToGray_(G)#Pinta todas as arestas de cinza
 baseColorMap = ["blue", "green", "red", "orange", "yellow", "pink", "brown", "black", "white"] #Cores disponiveis
 colorMap = [] #Colormap para fazer a coloração do grafo
+start_time = time.time() #Calcular tempo de execução
 for nd in G.nodes: #Loop por todos os nodes
     colorChoices = baseColorMap[:] #Clono as cores disponíveis
     for vizinho in G[nd]: #Loop por todos os vizinhos do vertice em questão
@@ -54,6 +56,7 @@ for nd in G.nodes: #Loop por todos os nodes
         G._node[nd]["color"] = "gray" #Se não tiver nenhuma das cores disponíveis, pinta como cinza
     colorMap.append(G._node[nd]["color"]) #Adiciona a cor ao mapa de cores
     ResultList += _AddResults_(nd, G._node[nd]["color"])
+print("--- %f segundos ---" % (time.time() - start_time))#Calcular tempo de execução
 
 _GenerateResultsFile_(ResultList)
 nx.draw(G, node_color = colorMap,with_labels=True) #Desenha o grafo
