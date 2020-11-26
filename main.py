@@ -4,6 +4,7 @@ import os.path
 from os import path
 import time
 import sys
+import random
 
 #Função que lê as arestas criadas pelo gerador de arestas
 def _ReadFromFile_():
@@ -42,7 +43,7 @@ ResultList = ""
 Arestas = _ReadFromFile_() #Leio as arestas
 _AddEdgeInGraph_(Arestas) #Adiciono as arestas
 _SetAllNodeColorsToGray_(G)#Pinta todas as arestas de cinza
-baseColorMap = ["blue", "green", "red", "orange", "yellow", "pink", "brown", "black", "white"] #Cores disponiveis
+baseColorMap = [] #Cores disponiveis
 colorMap = [] #Colormap para fazer a coloração do grafo
 start_time = time.time() #Calcular tempo de execução
 for nd in G.nodes: #Loop por todos os nodes
@@ -53,7 +54,11 @@ for nd in G.nodes: #Loop por todos os nodes
     if len(colorChoices) > 0: #Se não tiver removido todas as cores
         G._node[nd]["color"] = colorChoices[0] #Adiciona a primeira cor disponível restante no vetor
     else:
-        G._node[nd]["color"] = "gray" #Se não tiver nenhuma das cores disponíveis, pinta como cinza
+        myColor = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+        while (myColor in baseColorMap):
+            myColor = "#{:06x}".format(random.randint(0, 0xFFFFFF))
+        baseColorMap.append(myColor)
+        G._node[nd]["color"] = myColor
     colorMap.append(G._node[nd]["color"]) #Adiciona a cor ao mapa de cores
     ResultList += _AddResults_(nd, G._node[nd]["color"])
 print("--- %f segundos ---" % (time.time() - start_time))#Calcular tempo de execução

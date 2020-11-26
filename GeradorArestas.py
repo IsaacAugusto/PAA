@@ -7,7 +7,7 @@ string = ""
 for i in range(ANumb):
   for j in range(ANumb):
     if j > i:
-      if random.randint(0, 10) < 5:
+      if random.randint(0, 10) < 2:
         string += str(i)+","+str(j)+"\n"
 
 
